@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="200" height="80" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    .logo-text { font-family: Arial, sans-serif; font-weight: bold; }
+    .primary { fill: #e31837; }
+  </style>
+  <rect width="200" height="80" fill="#f5f5f5" rx="5" ry="5" />
+  <g>
+    <text x="100" y="50" text-anchor="middle" class="logo-text primary" font-size="42">RTL</text>
+  </g>
+</svg>

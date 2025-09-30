@@ -1,0 +1,114 @@
+{
+  "name": "Luxembourg Pas Chère",
+  "short_name": "LuxPasChère",
+  "description": "Entdecken Sie Luxemburg ohne viel Geld auszugeben. Finden Sie günstige Restaurants, Unterhaltung, Shopping und mehr.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#E31837",
+  "orientation": "portrait-primary",
+  "dir": "ltr",
+  "lang": "de",
+  "categories": ["lifestyle", "travel", "finance", "shopping"],
+  "icons": [
+    {
+      "src": "/images/icons/icon-72x72.png",
+      "sizes": "72x72",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/images/icons/icon-96x96.png",
+      "sizes": "96x96",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/images/icons/icon-128x128.png",
+      "sizes": "128x128",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/images/icons/icon-144x144.png",
+      "sizes": "144x144",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/images/icons/icon-152x152.png",
+      "sizes": "152x152",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/images/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/images/icons/icon-384x384.png",
+      "sizes": "384x384",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/images/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/images/screenshots/homepage-narrow.png",
+      "sizes": "750x1334",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Homepage of Luxembourg Pas Chère (Mobile)"
+    },
+    {
+      "src": "/images/screenshots/homepage-wide.png",
+      "sizes": "1280x800",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Homepage of Luxembourg Pas Chère (Desktop)"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Aktuelle Angebote",
+      "short_name": "Angebote",
+      "description": "Zeige die neuesten Angebote und Rabatte",
+      "url": "/#offers",
+      "icons": [{"src": "/images/icons/offers-192x192.png", "sizes": "192x192"}]
+    },
+    {
+      "name": "Blog lesen",
+      "short_name": "Blog",
+      "description": "Lesen Sie unsere neuesten Artikel",
+      "url": "/#blog",
+      "icons": [{"src": "/images/icons/blog-192x192.png", "sizes": "192x192"}]
+    }
+  ],
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "https://luxembourgpaschère.com/manifest.json"
+    }
+  ],
+  "prefer_related_applications": false,
+  "scope": "/",
+  "share_target": {
+    "action": "/share-target",
+    "method": "GET",
+    "enctype": "application/x-www-form-urlencoded",
+    "params": {
+      "title": "title",
+      "text": "text",
+      "url": "url"
+    }
+  },
+  "capture_links": "new-client"
+}

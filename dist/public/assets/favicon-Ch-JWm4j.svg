@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
+  <defs>
+    <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#E31837" />
+      <stop offset="100%" stop-color="#00A4E0" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background circle -->
+  <circle cx="16" cy="16" r="16" fill="white" />
+  
+  <!-- Stylized "L" in Luxembourg colors -->
+  <path d="M8 6h4v14h12v4H8z" fill="url(#logoGradient)" />
+  
+  <!-- Euro symbol -->
+  <circle cx="22" cy="10" r="6" fill="#E31837" />
+  <text x="22" y="13" font-family="Arial, sans-serif" font-size="8" font-weight="bold" fill="white" text-anchor="middle">€</text>
+</svg>
