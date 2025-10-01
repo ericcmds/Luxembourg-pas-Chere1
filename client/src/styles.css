@@ -1,4 +1,4 @@
-/* Luxembourg Pas Chere Styles - Optimized Version */
+﻿/* Luxembourg Pas Chere Styles - Optimized Version */
 
 :root {
   /* Brand Colors - Updated based on requirements */
@@ -1943,5 +1943,576 @@ p {
   
   .faq-question h3 {
     font-size: 0.95rem;
+  }
+}
+/* Additional styles for MinimalApp.tsx compatibility */
+
+/* About Image 3D Effect */
+.about-image-3d {
+  position: relative;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+  transform: perspective(1000px) rotateY(5deg) rotateX(5deg);
+  transition: transform 0.5s ease;
+}
+
+.about-image-3d:hover {
+  transform: perspective(1000px) rotateY(0deg) rotateX(0deg);
+}
+
+/* Floating Stats Badge */
+.floating-stats {
+  position: absolute;
+  bottom: -2rem;
+  right: -2rem;
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  border: 1px solid #eee;
+  z-index: 2;
+}
+
+@media (max-width: 992px) {
+  .floating-stats {
+    right: 0;
+  }
+}
+
+/* Floating Badge */
+.floating-badge {
+  position: absolute;
+  top: -1.5rem;
+  left: -1.5rem;
+  background: #E31837;
+  color: white;
+  border-radius: 8px;
+  padding: 0.75rem 1.25rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  box-shadow: 0 10px 20px rgba(227, 24, 55, 0.3);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+@media (max-width: 992px) {
+  .floating-badge {
+    left: 0;
+  }
+}
+
+/* CTA Button Hover Effects */
+.cta-button-hover {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.cta-button-hover:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 20px rgba(227, 24, 55, 0.4);
+}
+
+/* Book Container 3D Effects */
+.book-container-3d {
+  position: relative;
+  transform: rotate(2deg);
+  transition: transform 0.5s ease, box-shadow 0.5s ease;
+}
+
+.book-container-3d:hover {
+  transform: rotate(0deg) translateY(-10px);
+  box-shadow: 0 30px 50px rgba(0,0,0,0.3);
+}
+
+/* Instagram Icon Scale Effect */
+.instagram-icon-scale {
+  transition: transform 0.3s ease;
+}
+
+.instagram-icon-scale:hover {
+  transform: scale(1.1);
+}
+
+/* Language Button Active */
+.lang-button-active {
+  font-weight: 600;
+}
+
+.lang-button-active:hover {
+  background-color: rgba(255, 255, 255, 0.3);
+  font-weight: 700;
+}
+
+/* Dropdown Animation */
+.lang-dropdown-animated {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  border: 1px solid #eee;
+  min-width: 120px;
+  z-index: 1000;
+  margin-top: 0.5rem;
+  opacity: 0;
+  visibility: hidden;
+  transform: scale(0.95) translateY(-10px);
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.lang-dropdown-animated.open {
+  opacity: 1;
+  visibility: visible;
+  transform: scale(1) translateY(0);
+}
+
+/* Language Dropdown Items */
+.lang-dropdown-item-styled {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 0.75rem 1rem;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: 0.9rem;
+  border-radius: 8px 8px 0 0;
+  transition: background-color 0.2s ease;
+}
+
+.lang-dropdown-item-styled:hover,
+.lang-dropdown-item-styled.active {
+  background-color: #f0f0f0;
+}
+
+.lang-dropdown-item-styled:last-child {
+  border-radius: 0 0 8px 8px;
+  border-top: 1px solid #eee;
+}
+
+/* Team Member Cards */
+.team-member-card {
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+  border: 1px solid #eee;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.team-member-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+}
+
+/* Team Member Image Container */
+.team-member-image {
+  height: 200px;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Testimonials Card */
+.testimonials-card {
+  background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+  border-radius: 12px;
+  padding: 2rem;
+  border: 1px solid #eee;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+  position: relative;
+  transition: transform 0.3s ease;
+}
+
+.testimonials-card:hover {
+  transform: translateY(-5px);
+}
+
+/* Testimonial Quote Icon */
+.testimonial-quote-mark {
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+  font-size: 3rem;
+  color: #f0f0f0;
+  font-family: serif;
+  line-height: 1;
+}
+
+/* Order Button Effects */
+.order-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  width: 100%;
+  background: #E31837;
+  color: white;
+  padding: 1rem;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 1.1rem;
+  box-shadow: 0 6px 15px rgba(227, 24, 55, 0.3);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: none;
+  cursor: pointer;
+}
+
+.order-button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 20px rgba(227, 24, 55, 0.4);
+}
+
+/* Book Display 3D */
+.book-3d-container {
+  position: relative;
+  perspective: 1000px;
+}
+
+.book-3d-transform {
+  position: relative;
+  transform-style: preserve-3d;
+  transform: rotateY(-30deg) rotateX(5deg);
+  transition: transform 0.6s ease;
+}
+
+.book-3d-container:hover .book-3d-transform {
+  transform: rotateY(-15deg) rotateX(5deg);
+}
+
+/* Book Front Cover */
+.book-front-cover {
+  position: relative;
+  background-size: cover;
+  width: 300px;
+  height: 420px;
+  border-radius: 4px 10px 10px 4px;
+  box-shadow: 0 25px 35px rgba(0,0,0,0.25);
+  backface-visibility: hidden;
+}
+
+/* Book Spine */
+.book-spine {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 40px;
+  height: 420px;
+  background: #E31837;
+  transform-origin: left;
+  transform: rotateY(-90deg) translateX(-40px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+/* Book Spine Text */
+.book-spine-text {
+  color: white;
+  font-size: 1.25rem;
+  font-weight: 800;
+  white-space: nowrap;
+  transform: rotate(-90deg);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+/* Book Pages */
+.book-pages {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 290px;
+  height: 410px;
+  background: white;
+  transform-origin: left;
+  transform: translateZ(-1px) translateX(5px) translateY(5px);
+  border-radius: 0 5px 5px 0;
+  box-shadow: inset 0 0 10px rgba(0,0,0,0.1);
+}
+
+/* Floating Book Labels */
+.floating-label-edition {
+  position: absolute;
+  top: -30px;
+  right: -20px;
+  background: #00A4E0;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  box-shadow: 0 5px 15px rgba(0, 164, 224, 0.3);
+  transform: rotate(5deg);
+  z-index: 2;
+}
+
+.floating-label-bestseller {
+  position: absolute;
+  bottom: -15px;
+  left: 20px;
+  background: #E31837;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  box-shadow: 0 5px 15px rgba(227, 24, 55, 0.3);
+  transform: rotate(-5deg);
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Form Input Styling */
+.form-input-base {
+  width: 100%;
+  padding: 0.875rem 1rem;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.3);
+  background: rgba(255,255,255,0.1);
+  backdrop-filter: blur(5px);
+  color: white;
+  outline: none;
+  font-size: 1rem;
+}
+
+.form-input-base::placeholder {
+  color: rgba(255,255,255,0.6);
+}
+
+.form-input-base:focus {
+  border-color: rgba(255,255,255,0.5);
+  box-shadow: 0 0 0 3px rgba(255,255,255,0.1);
+}
+
+/* Submit Button */
+.submit-button {
+  width: 100%;
+  background: white;
+  color: #E31837;
+  border: none;
+  padding: 1rem;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.submit-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+/* Mobile responsive utilities */
+.mobile-hidden {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .mobile-hidden {
+    display: block;
+  }
+
+  .desktop-hidden {
+    display: none;
+  }
+}
+
+@media (max-width: 992px) {
+  .mobile-responsive-padding {
+    padding: 1rem;
+  }
+}
+
+/* Hover effects */
+.hover-scale {
+  transition: transform 0.3s ease;
+}
+
+.hover-scale:hover {
+  transform: scale(1.1);
+}
+
+.hover-opacity {
+  transition: opacity 0.3s ease;
+}
+
+.hover-opacity:hover {
+  opacity: 1;
+}
+
+/* Placeholder styles */
+.input-placeholder::placeholder {
+  color: #999;
+  font-style: italic;
+}
+
+.textarea-placeholder::placeholder {
+  color: #999;
+  font-style: italic;
+}
+
+/* Button hover effects */
+.btn-hover-bg:hover {
+  background-color: #f5f5f5;
+}
+
+.btn-hover-bg-red:hover {
+  background-color: #E31837;
+  color: white;
+}
+
+/* Link hover effects */
+.link-hover-color:hover {
+  color: #aaa;
+}
+
+/* Responsive text sizing */
+@media (max-width: 992px) {
+  .responsive-text-sm {
+    font-size: 0.875rem;
+  }
+
+  .responsive-text-md {
+    font-size: 1rem;
+  }
+
+  .responsive-text-lg {
+    font-size: 1.25rem;
+  }
+}
+
+/* Responsive spacing */
+@media (max-width: 992px) {
+  .responsive-gap {
+    gap: 1rem;
+  }
+
+  .responsive-padding {
+    padding: 1rem;
+  }
+}
+
+.book-features-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: center;
+}
+
+@media (max-width: 992px) {
+  .book-features-grid {
+    grid-template-columns: 1fr;
+    gap: 3rem;
+  }
+}
+
+.contact-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+}
+
+@media (max-width: 992px) {
+  .contact-grid {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+}
+
+.hover-bg:hover {
+  background: rgba(255,255,255,0.3);
+}
+
+/* Button hover effects */
+.btn-hover-bg:hover {
+  background-color: #f5f5f5;
+}
+
+.btn-hover-bg-red:hover {
+  background-color: #E31837;
+  color: white;
+}
+
+/* Link hover effects */
+.link-hover-color:hover {
+  color: #aaa;
+}
+
+/* Hover styles moved from inline styles to avoid TypeScript errors */
+.hero-book-container:hover {
+  transform: rotate(0deg) translateY(-10px);
+  box-shadow: 0 30px 50px rgba(0,0,0,0.3);
+}
+
+.cta-button-primary:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 20px rgba(227, 24, 55, 0.4);
+}
+
+.cta-button-secondary:hover {
+  background-color: rgba(255,255,255,0.1);
+}
+
+.about-cta-button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 20px rgba(227, 24, 55, 0.4);
+}
+
+.testimonials-card-hover:hover {
+  transform: translateY(-5px);
+}
+
+.book-order-button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 20px rgba(227, 24, 55, 0.4);
+}
+
+.book-order-hover:hover {
+  background-color: #d01531;
+}
+
+.book-display-hover:hover {
+  transform: rotateY(-15deg) rotateX(5deg);
+}
+
+.book-link-hover:nth-child(1):hover {
+  transform: scale(1.05);
+}
+.book-link-hover:nth-child(2):hover {
+  transform: scale(1.05);
+}
+
+.contact-submit-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.footer-link-hover:hover {
+  color: #aaa;
+}
+
+.footer-link-hover:hover {
+  color: #aaa;
+}
+
+/* Placeholder styles */
+.footer-input::placeholder {
+  color: #777;
+}
+
+@media (max-width: 768px) {
+  .responsive-gap {
+    gap: 0.5rem;
+  }
+
+  .responsive-padding {
+    padding: 0.5rem;
   }
 }

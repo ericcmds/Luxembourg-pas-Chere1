@@ -7,9 +7,8 @@
 
 import { useState, useEffect } from 'react';
 
-// API Key configuration
-const ANTHROPIC_API_KEY = import.meta.env.VITE_ANTHROPIC_API_KEY || process.env.ANTHROPIC_API_KEY || '';
-const API_URL = 'https://api.anthropic.com/v1/messages';
+// Server proxy configuration
+const API_URL = '/api/anthropic';
 
 // Error types for better error handling
 type ClaudeErrorType = 'api_key_missing' | 'network_error' | 'api_error' | 'parsing_error';
@@ -29,38 +28,17 @@ interface ClaudeResponse {
  * @param prompt - The prompt to send to the API
  */
 export async function generateContent(prompt: string): Promise<ClaudeResponse> {
-  // Check if API key is available
-  if (!ANTHROPIC_API_KEY) {
-    return {
-      text: '',
-      success: false,
-      error: {
-        type: 'api_key_missing',
-        message: 'Anthropic Claude API key is missing. Please add it to your environment variables.'
-      }
-    };
-  }
-
   try {
-    // Prepare the request payload
+    // Prepare the request payload for server proxy
     const payload = {
-      model: "claude-3-sonnet-20240229",
-      max_tokens: 1000,
-      messages: [
-        {
-          role: "user",
-          content: prompt
-        }
-      ]
+      prompt: prompt
     };
 
-    // Make the API request
+    // Make the API request to server proxy
     const response = await fetch(API_URL, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': ANTHROPIC_API_KEY,
-        'anthropic-version': '2023-06-01'
+        'Content-Type': 'application/json'
       },
       body: JSON.stringify(payload),
     });
@@ -68,19 +46,56 @@ export async function generateContent(prompt: string): Promise<ClaudeResponse> {
     // Check if the request was successful
     if (!response.ok) {
       const errorData = await response.json();
+
+      // Handle different server error types
+      if (response.status === 429) {
+        return {
+          text: '',
+          success: false,
+          error: {
+            type: 'api_error',
+            message: 'Rate limit exceeded - please try again later'
+          }
+        };
+      }
+
+      if (response.status >= 500) {
+        return {
+          text: '',
+          success: false,
+          error: {
+            type: 'network_error',
+            message: 'Server error - please try again later'
+          }
+        };
+      }
+
       return {
         text: '',
         success: false,
         error: {
           type: 'api_error',
-          message: `API Error: ${errorData.error?.message || 'Unknown error'}`
+          message: `API Error: ${errorData.message || 'Unknown error'}`
         }
       };
     }
 
-    // Parse the response
-    const data = await response.json();
-    const generatedText = data.content?.[0]?.text || '';
+    // Parse the response from server proxy
+    const responseData = await response.json();
+
+    if (!responseData.success) {
+      return {
+        text: '',
+        success: false,
+        error: {
+          type: 'api_error',
+          message: `Server Error: ${responseData.message || 'Unknown error'}`
+        }
+      };
+    }
+
+    // Extract the generated text from the server's response
+    const generatedText = responseData.data?.content?.[0]?.text || '';
 
     return {
       text: generatedText,

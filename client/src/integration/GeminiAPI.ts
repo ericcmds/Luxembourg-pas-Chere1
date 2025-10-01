@@ -7,9 +7,8 @@
 
 import { useState, useEffect } from 'react';
 
-// API Key configuration
-const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY || '';
-const API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent';
+// Server proxy configuration
+const API_URL = '/api/gemini';
 
 // Error types for better error handling
 type GeminiErrorType = 'api_key_missing' | 'network_error' | 'api_error' | 'parsing_error';
@@ -29,43 +28,17 @@ interface GeminiResponse {
  * @param prompt - The prompt to send to the API
  */
 export async function generateContent(prompt: string): Promise<GeminiResponse> {
-  // Check if API key is available
-  if (!GEMINI_API_KEY) {
-    return {
-      text: '',
-      success: false,
-      error: {
-        type: 'api_key_missing',
-        message: 'Google Gemini API key is missing. Please add it to your environment variables.'
-      }
-    };
-  }
-
   try {
-    // Prepare the request payload
+    // Prepare the request payload for server proxy
     const payload = {
-      contents: [
-        {
-          parts: [
-            {
-              text: prompt
-            }
-          ]
-        }
-      ],
-      generationConfig: {
-        temperature: 0.7,
-        topK: 40,
-        topP: 0.95,
-        maxOutputTokens: 1000,
-      }
+      prompt: prompt
     };
 
-    // Make the API request
-    const response = await fetch(`${API_URL}?key=${GEMINI_API_KEY}`, {
+    // Make the API request to server proxy
+    const response = await fetch(API_URL, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
+        'Content-Type': 'application/json'
       },
       body: JSON.stringify(payload),
     });
@@ -73,19 +46,56 @@ export async function generateContent(prompt: string): Promise<GeminiResponse> {
     // Check if the request was successful
     if (!response.ok) {
       const errorData = await response.json();
+
+      // Handle different server error types
+      if (response.status === 429) {
+        return {
+          text: '',
+          success: false,
+          error: {
+            type: 'api_error',
+            message: 'Rate limit exceeded - please try again later'
+          }
+        };
+      }
+
+      if (response.status >= 500) {
+        return {
+          text: '',
+          success: false,
+          error: {
+            type: 'network_error',
+            message: 'Server error - please try again later'
+          }
+        };
+      }
+
       return {
         text: '',
         success: false,
         error: {
           type: 'api_error',
-          message: `API Error: ${errorData.error?.message || 'Unknown error'}`
+          message: `API Error: ${errorData.message || 'Unknown error'}`
         }
       };
     }
 
-    // Parse the response
-    const data = await response.json();
-    const generatedText = data.candidates[0]?.content?.parts[0]?.text || '';
+    // Parse the response from server proxy
+    const responseData = await response.json();
+
+    if (!responseData.success) {
+      return {
+        text: '',
+        success: false,
+        error: {
+          type: 'api_error',
+          message: `Server Error: ${responseData.message || 'Unknown error'}`
+        }
+      };
+    }
+
+    // Extract the generated text from the server's response
+    const generatedText = responseData.data?.content || '';
 
     return {
       text: generatedText,

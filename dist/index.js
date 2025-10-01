@@ -110,10 +110,17 @@ var newsletterSchema = createInsertSchema(newsletters).pick({
 }).extend({
   email: z.string().email("Please enter a valid email address")
 });
+var anthropicRequestSchema = z.object({
+  prompt: z.string().min(1, "Prompt is required and cannot be empty")
+});
+var geminiRequestSchema = z.object({
+  prompt: z.string().min(1, "Prompt is required and cannot be empty")
+});
 
 // server/routes.ts
 import rateLimit from "express-rate-limit";
 import { ZodError } from "zod";
+import axios from "axios";
 var contactLimiter = rateLimit({
   windowMs: 60 * 1e3,
   // 1 minute
@@ -127,6 +134,20 @@ var newsletterLimiter = rateLimit({
   max: 5,
   // 5 requests per hour
   message: { error: "Too many newsletter subscriptions, please try again later" }
+});
+var anthropicLimiter = rateLimit({
+  windowMs: 60 * 1e3,
+  // 1 minute
+  max: 3,
+  // 3 requests per minute
+  message: { error: "Too many Anthropic API requests, please try again later" }
+});
+var geminiLimiter = rateLimit({
+  windowMs: 60 * 1e3,
+  // 1 minute
+  max: 3,
+  // 3 requests per minute
+  message: { error: "Too many Gemini API requests, please try again later" }
 });
 async function registerRoutes(app2) {
   app2.post("/api/contact", contactLimiter, async (req, res) => {
@@ -164,6 +185,168 @@ async function registerRoutes(app2) {
         });
       }
       res.status(400).json({ success: false, message: "Invalid newsletter subscription data" });
+    }
+  });
+  app2.post("/api/anthropic", anthropicLimiter, async (req, res) => {
+    try {
+      const validatedData = anthropicRequestSchema.parse(req.body);
+      const apiKey = process.env.ANTHROPIC_API_KEY;
+      if (!apiKey) {
+        console.error("ANTHROPIC_API_KEY environment variable is not set");
+        return res.status(500).json({
+          success: false,
+          message: "Server configuration error"
+        });
+      }
+      const response = await axios.post(
+        "https://api.anthropic.com/v1/messages",
+        {
+          model: "claude-3-sonnet-20240229",
+          max_tokens: 1024,
+          messages: [
+            {
+              role: "user",
+              content: validatedData.prompt
+            }
+          ]
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            "x-api-key": apiKey,
+            "anthropic-version": "2023-06-01"
+          },
+          timeout: 3e4
+          // 30 second timeout
+        }
+      );
+      res.status(200).json({
+        success: true,
+        message: "Anthropic API request successful",
+        data: response.data
+      });
+    } catch (error) {
+      console.error("Anthropic API request error:", error);
+      if (error instanceof ZodError) {
+        return res.status(400).json({
+          success: false,
+          message: "Validation error",
+          errors: error.errors
+        });
+      }
+      if (axios.isAxiosError(error)) {
+        if (error.response?.status === 429) {
+          return res.status(429).json({
+            success: false,
+            message: "Rate limit exceeded - please try again later"
+          });
+        }
+        if (error.response?.status === 401) {
+          console.error("Invalid Anthropic API key");
+          return res.status(500).json({
+            success: false,
+            message: "Server configuration error"
+          });
+        }
+        if (error.code === "ECONNREFUSED" || error.code === "ENOTFOUND") {
+          return res.status(502).json({
+            success: false,
+            message: "Unable to connect to Anthropic API"
+          });
+        }
+        return res.status(502).json({
+          success: false,
+          message: "Anthropic API request failed"
+        });
+      }
+      res.status(500).json({
+        success: false,
+        message: "An internal server error occurred"
+      });
+    }
+  });
+  app2.post("/api/gemini", geminiLimiter, async (req, res) => {
+    try {
+      const validatedData = geminiRequestSchema.parse(req.body);
+      const apiKey = process.env.GEMINI_API_KEY;
+      if (!apiKey) {
+        console.error("GEMINI_API_KEY environment variable is not set");
+        return res.status(500).json({
+          success: false,
+          message: "Server configuration error"
+        });
+      }
+      const response = await axios.post(
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${apiKey}`,
+        {
+          contents: [
+            {
+              parts: [
+                {
+                  text: validatedData.prompt
+                }
+              ]
+            }
+          ]
+        },
+        {
+          headers: {
+            "Content-Type": "application/json"
+          },
+          timeout: 3e4
+          // 30 second timeout
+        }
+      );
+      res.status(200).json({
+        success: true,
+        message: "Gemini API request successful",
+        data: response.data
+      });
+    } catch (error) {
+      console.error("Gemini API request error:", error);
+      if (error instanceof ZodError) {
+        return res.status(400).json({
+          success: false,
+          message: "Validation error",
+          errors: error.errors
+        });
+      }
+      if (axios.isAxiosError(error)) {
+        if (error.response?.status === 429) {
+          return res.status(429).json({
+            success: false,
+            message: "Rate limit exceeded - please try again later"
+          });
+        }
+        if (error.response?.status === 401) {
+          console.error("Invalid Gemini API key");
+          return res.status(500).json({
+            success: false,
+            message: "Server configuration error"
+          });
+        }
+        if (error.response?.status === 403) {
+          console.error("Gemini API access forbidden - check API key permissions");
+          return res.status(500).json({
+            success: false,
+            message: "Server configuration error"
+          });
+        }
+        if (error.code === "ECONNREFUSED" || error.code === "ENOTFOUND") {
+          return res.status(502).json({
+            success: false,
+            message: "Unable to connect to Gemini API"
+          });
+        }
+        return res.status(502).json({
+          success: false,
+          message: "Gemini API request failed"
+        });
+      }
+      res.status(500).json({
+        success: false,
+        message: "An internal server error occurred"
+      });
     }
   });
   const httpServer = createServer(app2);
@@ -254,7 +437,7 @@ async function setupVite(app2, server) {
       strict: false,
       allow: [".."]
     },
-    allowedHosts: "*"
+    allowedHosts: ["*"]
   };
   const vite = await createViteServer({
     ...vite_config_default,
@@ -358,27 +541,31 @@ process.env.VITE_ALLOWED_HOSTS = "*";
 process.env.VITE_DISABLE_HOST_CHECK = "true";
 process.env.VITE_HOST_CHECK = "false";
 process.env.VITE_ALLOW_ALL_HOSTS = "true";
+var ALLOWED_ORIGINS = process.env.ALLOWED_ORIGINS ? process.env.ALLOWED_ORIGINS.split(",").map((origin) => origin.trim()) : ["http://localhost:3000", "http://localhost:5173", "http://127.0.0.1:5173", "http://127.0.0.1:3000"];
+var isOriginAllowed = (origin) => {
+  if (!origin) return false;
+  return ALLOWED_ORIGINS.includes(origin);
+};
+var corsOptions = {
+  origin: (origin, callback) => {
+    if (!origin || isOriginAllowed(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
+  allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With", "Origin", "Accept"],
+  preflightContinue: false,
+  optionsSuccessStatus: 204
+};
 var app = express2();
 app.set("trust proxy", 1);
 app.use(bypassHostCheck);
-app.use(cors({
-  origin: "*",
-  credentials: true,
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
-  allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With", "Origin", "Accept", "Access-Control-Allow-Origin"],
-  preflightContinue: false,
-  optionsSuccessStatus: 204
-}));
+app.use(cors(corsOptions));
 app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization, Access-Control-Allow-Origin");
-  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, PATCH");
-  res.header("Access-Control-Allow-Credentials", "true");
-  res.header("X-Frame-Options", "ALLOWALL");
   res.header("Content-Security-Policy", "default-src * 'unsafe-inline' 'unsafe-eval'; script-src * 'unsafe-inline' 'unsafe-eval'; connect-src * 'unsafe-inline'; img-src * data: blob: 'unsafe-inline'; frame-src *; style-src * 'unsafe-inline';");
-  if (req.method === "OPTIONS") {
-    return res.status(204).end();
-  }
   next();
 });
 app.get("/api/cors-test", (req, res) => {
@@ -443,14 +630,13 @@ app.use((req, res, next) => {
   } else {
     serveStatic(app);
   }
-  const port = 5e3;
+  const port = process.env.PORT ? parseInt(process.env.PORT) : 3e3;
   server.listen({
     port,
-    host: "0.0.0.0",
-    reusePort: true
+    host: "127.0.0.1"
   }, () => {
     log(`serving on port ${port}`);
-    console.log(`Server running at http://0.0.0.0:${port}`);
+    console.log(`Server running at http://127.0.0.1:${port}`);
     console.log("WebSocket server ready");
   });
   process.on("SIGTERM", () => {

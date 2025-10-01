@@ -41,7 +41,7 @@ export async function setupVite(app: Express, server: Server) {
       strict: false,
       allow: ['..']
     },
-    allowedHosts: '*'
+    allowedHosts: ['*']
   };
 
   const vite = await createViteServer({

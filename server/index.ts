@@ -14,36 +14,48 @@ process.env.VITE_DISABLE_HOST_CHECK = "true";
 process.env.VITE_HOST_CHECK = "false";
 process.env.VITE_ALLOW_ALL_HOSTS = "true";
 
+// CORS Security Configuration
+// Parse ALLOWED_ORIGINS environment variable (comma-separated)
+const ALLOWED_ORIGINS = process.env.ALLOWED_ORIGINS
+  ? process.env.ALLOWED_ORIGINS.split(',').map(origin => origin.trim())
+  : ['http://localhost:3000', 'http://localhost:5173', 'http://127.0.0.1:5173', 'http://127.0.0.1:3000'];
+
+// Origin validation function for CORS
+const isOriginAllowed = (origin: string | undefined): boolean => {
+  if (!origin) return false;
+  return ALLOWED_ORIGINS.includes(origin);
+};
+
+// CORS configuration function
+const corsOptions: cors.CorsOptions = {
+  origin: (origin, callback) => {
+    if (!origin || isOriginAllowed(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Origin', 'Accept'],
+  preflightContinue: false,
+  optionsSuccessStatus: 204
+};
+
 const app = express();
 app.set('trust proxy', 1);
 
 // Host-Bypass-Middleware als erstes einbinden
 app.use(bypassHostCheck);
 
-// Maximale CORS-Flexibilität für alle Hosts
-app.use(cors({
-  origin: '*',
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Origin', 'Accept', 'Access-Control-Allow-Origin'],
-  preflightContinue: false,
-  optionsSuccessStatus: 204
-}));
+// Secure CORS configuration with environment-based allowed origins
+app.use(cors(corsOptions));
 
-// Erweiterte CORS-Header für alle Anfragen
+// Simplified headers - CORS is now handled by cors middleware
 app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization, Access-Control-Allow-Origin');
-  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS, PATCH');
-  res.header('Access-Control-Allow-Credentials', 'true');
-  res.header('X-Frame-Options', 'ALLOWALL');
-  
-  // Content Security Policy für WebViews
+  // Content Security Policy für WebViews (keeping existing CSP for compatibility)
   res.header('Content-Security-Policy', "default-src * 'unsafe-inline' 'unsafe-eval'; script-src * 'unsafe-inline' 'unsafe-eval'; connect-src * 'unsafe-inline'; img-src * data: blob: 'unsafe-inline'; frame-src *; style-src * 'unsafe-inline';");
-  
-  if (req.method === 'OPTIONS') {
-    return res.status(204).end();
-  }
+
   next();
 });
 
@@ -122,17 +134,14 @@ app.use((req, res, next) => {
     serveStatic(app);
   }
 
-  // ALWAYS serve the app on port 5000
-  // this serves both the API and the client.
-  // It is the only port that is not firewalled.
-  const port = 5000;
+  // serve on port 3000 for development
+  const port = process.env.PORT ? parseInt(process.env.PORT) : 3000;
   server.listen({
     port,
-    host: "0.0.0.0",
-    reusePort: true,
+    host: "127.0.0.1",
   }, () => {
     log(`serving on port ${port}`);
-    console.log(`Server running at http://0.0.0.0:${port}`);
+    console.log(`Server running at http://127.0.0.1:${port}`);
     console.log('WebSocket server ready');
   });
 

@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { Instagram, ChevronDown, ChevronUp, Menu, X, ArrowRight, ShoppingCart, Calendar, MapPin, Star, Users, Book, Heart, ExternalLink } from 'lucide-react';
+import { Instagram, ChevronDown, ChevronUp, Menu, X, ArrowRight, ShoppingCart, Calendar, MapPin, Star, Users, Book, Heart, ExternalLink, Check, Wand2 } from 'lucide-react';
 import ClaudeDesignAssistant from './components/ClaudeDesignAssistant';
 
 export default function MinimalApp() {
@@ -8,6 +8,7 @@ export default function MinimalApp() {
   const [isLangDropdownOpen, setIsLangDropdownOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('home');
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const aboutSectionRef = useRef<HTMLElement>(null);
   const headerRef = useRef<HTMLElement>(null);
   
@@ -60,6 +61,16 @@ export default function MinimalApp() {
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [isMobileMenuOpen]);
+
+  // Window resize handler for responsive design
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const navItems = [
     { id: 'home', label: 'Accueil' },
@@ -159,11 +170,10 @@ export default function MinimalApp() {
           </div>
           
           {/* Mobile Menu Button */}
-          <button 
+          <button
             onClick={toggleMobileMenu}
             aria-label={isMobileMenuOpen ? "Fermer le menu" : "Ouvrir le menu"}
-            style={{ 
-              display: 'none',
+            style={{
               display: window.innerWidth <= 768 ? 'block' : 'none',
               background: 'none',
               border: 'none',
@@ -178,7 +188,7 @@ export default function MinimalApp() {
           
           {/* Navigation - Desktop */}
           <nav style={{ 
-            '@media (max-width: 768px)': { display: 'none' } 
+            display: window.innerWidth <= 768 ? 'none' : 'block'
           }}>
             <ul style={{ display: 'flex', listStyle: 'none', gap: '2rem', margin: 0, padding: 0, alignItems: 'center' }}>
               {navItems.map(item => (
@@ -223,8 +233,9 @@ export default function MinimalApp() {
                     justifyContent: 'center',
                     boxShadow: '0 2px 10px rgba(0,0,0,0.2)',
                     transition: 'transform 0.3s ease',
-                    ':hover': { transform: 'scale(1.1)' }
-                  }}>
+                  }}
+                  className="instagram-icon"
+                  >
                     <Instagram size={20} color="white" />
                   </div>
                 </a>
@@ -248,64 +259,47 @@ export default function MinimalApp() {
                     {isLangDropdownOpen ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
                   </button>
                   {isLangDropdownOpen && (
-                    <div style={{ 
-                      position: 'absolute', 
+                    <div style={{
+                      position: 'absolute',
                       top: '100%',
                       right: 0,
-                      backgroundColor: 'white',
-                      boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+                      background: 'white',
                       borderRadius: '8px',
-                      padding: '0.5rem',
+                      boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+                      border: '1px solid #eee',
                       minWidth: '120px',
-                      animation: 'fadeIn 0.2s ease'
+                      zIndex: 1000,
+                      marginTop: '0.5rem'
                     }}>
-                      <button 
-                        onClick={() => handleLanguageChange('fr')} 
-                        style={{ 
-                          display: 'block', 
-                          width: '100%', 
-                          textAlign: 'left', 
-                          padding: '0.5rem 1rem', 
-                          border: 'none', 
-                          borderRadius: '4px',
-                          background: language === 'fr' ? '#f0f0f0' : 'none', 
+                      <button
+                        onClick={() => handleLanguageChange('fr')}
+                        style={{
+                          display: 'block',
+                          width: '100%',
+                          textAlign: 'left',
+                          padding: '0.75rem 1rem',
+                          border: 'none',
+                          background: language === 'fr' ? '#f0f0f0' : 'none',
                           cursor: 'pointer',
-                          transition: 'background-color 0.2s ease',
-                          ':hover': { backgroundColor: '#f5f5f5' }
+                          fontSize: '0.9rem',
+                          borderRadius: '8px 8px 0 0'
                         }}
                       >
                         Français
                       </button>
-                      <button 
-                        onClick={() => handleLanguageChange('de')} 
-                        style={{ 
-                          display: 'block', 
-                          width: '100%', 
-                          textAlign: 'left', 
-                          padding: '0.5rem 1rem', 
-                          border: 'none', 
-                          borderRadius: '4px',
-                          background: language === 'de' ? '#f0f0f0' : 'none', 
+                      <button
+                        onClick={() => handleLanguageChange('en')}
+                        style={{
+                          display: 'block',
+                          width: '100%',
+                          textAlign: 'left',
+                          padding: '0.75rem 1rem',
+                          border: 'none',
+                          background: language === 'en' ? '#f0f0f0' : 'none',
                           cursor: 'pointer',
-                          transition: 'background-color 0.2s ease',
-                          ':hover': { backgroundColor: '#f5f5f5' }
-                        }}
-                      >
-                        Deutsch
-                      </button>
-                      <button 
-                        onClick={() => handleLanguageChange('en')} 
-                        style={{ 
-                          display: 'block', 
-                          width: '100%', 
-                          textAlign: 'left', 
-                          padding: '0.5rem 1rem', 
-                          border: 'none', 
-                          borderRadius: '4px',
-                          background: language === 'en' ? '#f0f0f0' : 'none', 
-                          cursor: 'pointer',
-                          transition: 'background-color 0.2s ease',
-                          ':hover': { backgroundColor: '#f5f5f5' }
+                          fontSize: '0.9rem',
+                          borderRadius: '0 0 8px 8px',
+                          borderTop: '1px solid #eee'
                         }}
                       >
                         English
@@ -498,22 +492,9 @@ export default function MinimalApp() {
           opacity: 1,
           animation: 'fadeInUp 0.8s ease-out'
         }}>
-          <div style={{ 
-            display: 'grid',
-            gridTemplateColumns: '1fr 1fr',
-            gap: '2rem',
-            alignItems: 'center',
-            '@media (max-width: 992px)': {
-              gridTemplateColumns: '1fr',
-              textAlign: 'center'
-            }
-          }}>
+          <div className="hero-grid">
             {/* Text Content */}
-            <div style={{ 
-              '@media (max-width: 992px)': { 
-                order: 2
-              }
-            }}>
+            <div className="hero-text-left">
               <div style={{ 
                 display: 'inline-flex',
                 alignItems: 'center',
@@ -542,30 +523,17 @@ export default function MinimalApp() {
                 <span style={{ color: 'rgba(255,255,255,0.9)' }}>Pas Chère</span>
               </h1>
               
-              <p style={{ 
-                fontSize: 'clamp(1rem, 1.5vw, 1.25rem)', 
-                lineHeight: '1.6',
-                marginBottom: '2rem',
-                maxWidth: '600px',
-                '@media (max-width: 992px)': { 
-                  margin: '0 auto 2rem'
-                }
-              }}>
+              <p className="hero-description">
                 Les meilleurs conseils et offres pour une vie abordable au Luxembourg. 
                 Découvrez comment profiter de ce magnifique pays sans vider votre portefeuille.
               </p>
               
               {/* CTA Buttons */}
-              <div style={{ 
-                display: 'flex', 
-                gap: '1rem',
-                '@media (max-width: 992px)': { 
-                  justifyContent: 'center'
-                }
-              }}>
-                <a 
-                  href="#book" 
-                  style={{ 
+              <div className="cta-buttons-container">
+                <a
+                  href="#book"
+                  className="cta-button"
+                  style={{
                     background: 'white',
                     color: '#E31837',
                     border: 'none',
@@ -577,19 +545,16 @@ export default function MinimalApp() {
                     alignItems: 'center',
                     textDecoration: 'none',
                     boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
-                    transition: 'transform 0.3s ease, box-shadow 0.3s ease',
-                    ':hover': {
-                      transform: 'translateY(-2px)',
-                      boxShadow: '0 6px 16px rgba(0,0,0,0.2)'
-                    }
+                    transition: 'transform 0.3s ease, box-shadow 0.3s ease'
                   }}
                 >
                   <ShoppingCart size={18} style={{ marginRight: '0.5rem' }} />
                   Commander le livre
                 </a>
-                <a 
-                  href="#about" 
-                  style={{ 
+                <a
+                  href="#about"
+                  className="cta-button-primary cta-button-secondary"
+                  style={{
                     background: 'rgba(255,255,255,0.15)',
                     color: 'white',
                     border: '1px solid rgba(255,255,255,0.3)',
@@ -601,10 +566,7 @@ export default function MinimalApp() {
                     alignItems: 'center',
                     textDecoration: 'none',
                     backdropFilter: 'blur(10px)',
-                    transition: 'background-color 0.3s ease',
-                    ':hover': {
-                      backgroundColor: 'rgba(255,255,255,0.25)'
-                    }
+                    transition: 'background-color 0.3s ease'
                   }}
                 >
                   En savoir plus
@@ -613,27 +575,20 @@ export default function MinimalApp() {
             </div>
             
             {/* Book Display with Enhanced Animation */}
-            <div style={{ 
-              display: 'flex',
-              justifyContent: 'center',
-              '@media (max-width: 992px)': { 
-                order: 1
-              }
-            }}>
-              <div style={{ 
-                background: 'white', 
-                padding: '1.5rem', 
-                borderRadius: '12px', 
-                boxShadow: '0 20px 40px rgba(0,0,0,0.25)',
-                width: 'min(100%, 320px)',
-                position: 'relative',
-                transform: 'rotate(2deg)',
-                transition: 'transform 0.5s ease, box-shadow 0.5s ease',
-                ':hover': {
-                  transform: 'rotate(0deg) translateY(-10px)',
-                  boxShadow: '0 30px 50px rgba(0,0,0,0.3)'
-                }
-              }}>
+            <div className="hero-book-right">
+              <div
+                className="hero-book-container"
+                style={{
+                  background: 'white',
+                  padding: '1.5rem',
+                  borderRadius: '12px',
+                  boxShadow: '0 20px 40px rgba(0,0,0,0.25)',
+                  width: 'min(100%, 320px)',
+                  position: 'relative',
+                  transform: 'rotate(2deg)',
+                  transition: 'transform 0.5s ease, box-shadow 0.5s ease'
+                }}
+              >
                 {/* Book Cover with Loading Animation */}
                 <div style={{ position: 'relative', overflow: 'hidden', borderRadius: '8px' }}>
                   <img 
@@ -714,15 +669,7 @@ export default function MinimalApp() {
           </div>
           
           {/* Features Banner */}
-          <div style={{ 
-            marginTop: '3rem',
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
-            gap: '1.5rem',
-            '@media (max-width: 768px)': {
-              marginTop: '2rem'
-            }
-          }}>
+          <div className="features-grid">
             <div style={{ 
               background: 'rgba(255,255,255,0.1)',
               backdropFilter: 'blur(10px)',
@@ -828,15 +775,14 @@ export default function MinimalApp() {
             transform: 'translateX(-50%)',
             animation: 'bounce 2s infinite'
           }}>
-            <a href="#about" style={{ 
+            <a href="#about" className="scroll-indicator" style={{
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
               color: 'white',
               textDecoration: 'none',
               opacity: 0.7,
-              transition: 'opacity 0.3s ease',
-              ':hover': { opacity: 1 }
+              transition: 'opacity 0.3s ease'
             }}>
               <span style={{ fontSize: '0.85rem', marginBottom: '0.5rem' }}>Découvrir</span>
               <ChevronDown size={24} />
@@ -913,39 +859,15 @@ export default function MinimalApp() {
           </div>
           
           {/* Main Content Grid */}
-          <div style={{ 
-            display: 'grid',
-            gridTemplateColumns: '1fr 1fr',
-            gap: '4rem',
-            alignItems: 'center',
-            '@media (max-width: 992px)': {
-              gridTemplateColumns: '1fr',
-              gap: '3rem'
-            }
-          }}>
+          <div className="about-grid">
             {/* Image Side */}
-            <div style={{ 
-              position: 'relative',
-              '@media (max-width: 992px)': {
-                order: 2
-              }
-            }}>
-              <div style={{ 
-                position: 'relative', 
-                borderRadius: '16px', 
-                overflow: 'hidden',
-                boxShadow: '0 20px 40px rgba(0,0,0,0.1)',
-                transform: 'perspective(1000px) rotateY(5deg) rotateX(5deg)',
-                transition: 'transform 0.5s ease',
-                ':hover': {
-                  transform: 'perspective(1000px) rotateY(0) rotateX(0)'
-                }
-              }}>
-                <img 
-                  src="https://images.unsplash.com/photo-1587974928442-77dc3e0dba72?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80" 
-                  alt="Vue panoramique de Luxembourg" 
-                  style={{ 
-                    width: '100%', 
+            <div className="about-image-left">
+              <div className="about-image-3d">
+                <img
+                  src="https://images.unsplash.com/photo-1587974928442-77dc3e0dba72?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80"
+                  alt="Vue panoramique de Luxembourg"
+                  style={{
+                    width: '100%',
                     display: 'block'
                   }}
                   loading="lazy"
@@ -953,20 +875,7 @@ export default function MinimalApp() {
               </div>
               
               {/* Floating Stats */}
-              <div style={{ 
-                position: 'absolute',
-                bottom: '-2rem',
-                right: '-2rem',
-                background: 'white',
-                borderRadius: '12px',
-                padding: '1.5rem',
-                boxShadow: '0 10px 30px rgba(0,0,0,0.1)',
-                border: '1px solid #eee',
-                zIndex: 2,
-                '@media (max-width: 992px)': {
-                  right: 0
-                }
-              }}>
+              <div className="floating-stats">
                 <div style={{ 
                   display: 'flex',
                   alignItems: 'center',
@@ -995,35 +904,14 @@ export default function MinimalApp() {
               </div>
               
               {/* Floating Badge */}
-              <div style={{ 
-                position: 'absolute',
-                top: '-1.5rem',
-                left: '-1.5rem',
-                background: '#E31837',
-                color: 'white',
-                borderRadius: '8px',
-                padding: '0.75rem 1.25rem',
-                fontSize: '0.875rem',
-                fontWeight: '600',
-                boxShadow: '0 10px 20px rgba(227, 24, 55, 0.3)',
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '0.5rem',
-                '@media (max-width: 992px)': {
-                  left: 0
-                }
-              }}>
+              <div className="floating-badge">
                 <Calendar size={16} />
                 Depuis 2022
               </div>
             </div>
             
             {/* Text Content Side */}
-            <div style={{ 
-              '@media (max-width: 992px)': {
-                order: 1
-              }
-            }}>
+            <div className="about-text-right">
               <h3 style={{ 
                 fontSize: '1.5rem', 
                 color: '#333',
@@ -1138,26 +1026,24 @@ export default function MinimalApp() {
               </div>
               
               {/* CTA Button */}
-              <a 
-                href="#book" 
-                style={{ 
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '0.75rem',
-                  background: '#E31837',
-                  color: 'white',
-                  padding: '0.875rem 2rem',
-                  borderRadius: '8px',
-                  textDecoration: 'none',
-                  fontWeight: '600',
-                  boxShadow: '0 6px 15px rgba(227, 24, 55, 0.3)',
-                  transition: 'transform 0.3s ease, box-shadow 0.3s ease',
-                  ':hover': {
-                    transform: 'translateY(-3px)',
-                    boxShadow: '0 10px 20px rgba(227, 24, 55, 0.4)'
-                  }
-                }}
-              >
+                    <a
+                      href="#about"
+                      className="cta-button-secondary-hover"
+                      style={{
+                        background: 'rgba(255,255,255,0.15)',
+                        color: 'white',
+                        border: '1px solid rgba(255,255,255,0.3)',
+                        padding: '0.75rem 1.5rem',
+                        borderRadius: '50px',
+                        fontSize: '1rem',
+                        fontWeight: '600',
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        textDecoration: 'none',
+                        backdropFilter: 'blur(10px)',
+                        transition: 'background-color 0.3s ease'
+                      }}
+                    >
                 Explorer le guide
                 <ArrowRight size={18} />
               </a>
@@ -1192,18 +1078,7 @@ export default function MinimalApp() {
               gap: '2rem'
             }}>
               {teamMembers.map((member, index) => (
-                <div key={index} style={{ 
-                  background: 'white',
-                  borderRadius: '12px',
-                  overflow: 'hidden',
-                  boxShadow: '0 10px 30px rgba(0,0,0,0.08)',
-                  border: '1px solid #eee',
-                  transition: 'transform 0.3s ease, box-shadow 0.3s ease',
-                  ':hover': {
-                    transform: 'translateY(-5px)',
-                    boxShadow: '0 15px 35px rgba(0,0,0,0.1)'
-                  }
-                }}>
+                <div key={index} className="team-member-card">
                   <div style={{ 
                     height: '200px',
                     overflow: 'hidden',
@@ -1281,18 +1156,19 @@ export default function MinimalApp() {
               gap: '2rem'
             }}>
               {testimonials.map((testimonial, index) => (
-                <div key={index} style={{ 
-                  background: 'linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%)',
-                  borderRadius: '12px',
-                  padding: '2rem',
-                  border: '1px solid #eee',
-                  boxShadow: '0 10px 30px rgba(0,0,0,0.05)',
-                  position: 'relative',
-                  transition: 'transform 0.3s ease',
-                  ':hover': {
-                    transform: 'translateY(-5px)'
-                  }
-                }}>
+                <div
+                  key={index}
+                  className="testimonials-card-hover"
+                  style={{
+                    background: 'linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%)',
+                    borderRadius: '12px',
+                    padding: '2rem',
+                    border: '1px solid #eee',
+                    boxShadow: '0 10px 30px rgba(0,0,0,0.05)',
+                    position: 'relative',
+                    transition: 'transform 0.3s ease'
+                  }}
+                >
                   {/* Quote Mark */}
                   <div style={{ 
                     position: 'absolute',
@@ -1427,22 +1303,9 @@ export default function MinimalApp() {
           </div>
           
           {/* Order Content */}
-          <div style={{ 
-            display: 'grid',
-            gridTemplateColumns: '1fr 1fr',
-            gap: '4rem',
-            alignItems: 'center',
-            '@media (max-width: 992px)': {
-              gridTemplateColumns: '1fr',
-              gap: '3rem'
-            }
-          }}>
+          <div className="book-features-grid">
             {/* Book Features */}
-            <div style={{ 
-              '@media (max-width: 992px)': {
-                order: 2
-              }
-            }}>
+            <div className="book-features-left">
               <h3 style={{ 
                 fontSize: '1.5rem', 
                 color: '#333',
@@ -1646,10 +1509,11 @@ export default function MinimalApp() {
                   </span>
                 </div>
                 
-                <a 
-                  href="#" 
+                <a
+                  href="#"
                   onClick={(e) => e.preventDefault()}
-                  style={{ 
+                  className="book-order-button"
+                  style={{
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
@@ -1663,11 +1527,7 @@ export default function MinimalApp() {
                     fontWeight: '600',
                     fontSize: '1.1rem',
                     boxShadow: '0 6px 15px rgba(227, 24, 55, 0.3)',
-                    transition: 'transform 0.3s ease, box-shadow 0.3s ease',
-                    ':hover': {
-                      transform: 'translateY(-3px)',
-                      boxShadow: '0 10px 20px rgba(227, 24, 55, 0.4)'
-                    }
+                    transition: 'transform 0.3s ease, box-shadow 0.3s ease'
                   }}
                 >
                   <ShoppingCart size={20} />
@@ -1686,29 +1546,21 @@ export default function MinimalApp() {
             </div>
             
             {/* Book Display */}
-            <div style={{ 
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              position: 'relative',
-              '@media (max-width: 992px)': {
-                order: 1
-              }
-            }}>
+            <div className="book-display-right">
               <div style={{ 
                 position: 'relative',
                 perspective: '1000px'
               }}>
                 {/* 3D Book */}
-                <div style={{ 
-                  position: 'relative',
-                  transformStyle: 'preserve-3d',
-                  transform: 'rotateY(-30deg) rotateX(5deg)',
-                  transition: 'transform 0.6s ease',
-                  ':hover': {
-                    transform: 'rotateY(-15deg) rotateX(5deg)'
-                  }
-                }}>
+                <div
+                  className="book-display-hover"
+                  style={{
+                    position: 'relative',
+                    transformStyle: 'preserve-3d',
+                    transform: 'rotateY(-30deg) rotateX(5deg)',
+                    transition: 'transform 0.6s ease'
+                  }}
+                >
                   {/* Front Cover */}
                   <div style={{ 
                     position: 'relative',
@@ -1809,36 +1661,57 @@ export default function MinimalApp() {
       </section>
 
       {/* Design Tools Section */}
-      <section id="design-tools" style={{ 
+      <section id="design-tools" style={{
         padding: '5rem 2rem',
         background: '#f8f9fa'
       }}>
-        <div style={{ 
+        <div style={{
           maxWidth: '1200px',
           margin: '0 auto',
+          textAlign: 'center'
         }}>
-          <div style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
-            <h2 style={{ 
-              fontSize: '2rem',
+          <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
+            <span style={{
+              display: 'inline-block',
+              color: '#00A4E0',
+              fontSize: '1rem',
+              fontWeight: '600',
+              marginBottom: '1rem',
+              position: 'relative'
+            }}>
+              AI ASSISTANT DESIGN
+              <span style={{
+                position: 'absolute',
+                bottom: '-8px',
+                left: '50%',
+                transform: 'translateX(-50%)',
+                width: '40px',
+                height: '3px',
+                background: '#00A4E0',
+                borderRadius: '4px'
+              }} />
+            </span>
+            <h2 style={{
+              fontSize: 'clamp(1.75rem, 4vw, 2.5rem)',
               color: '#333',
-              marginBottom: '1.25rem',
-              fontWeight: '700'
+              margin: '0 0 1.5rem',
+              fontWeight: '800'
             }}>
               Design-Optimierung mit Claude
             </h2>
-            <p style={{ 
+            <p style={{
               color: '#666',
               maxWidth: '700px',
               margin: '0 auto',
               fontSize: '1.05rem',
               lineHeight: '1.6'
             }}>
-              Nutzen Sie die Kraft der Claude 3.7 KI, um professionelle Designvorschläge für unsere Website zu generieren. 
+              Nutzen Sie die Kraft der Claude 3.7 KI, um professionelle Designvorschläge für unsere Website zu generieren.
               Helfen Sie uns, die visuelle Gestaltung und Benutzerführung zu optimieren.
             </p>
-            <button 
+            <button
               onClick={toggleDesignAssistant}
-              style={{ 
+              style={{
                 background: '#00A4E0',
                 color: 'white',
                 border: 'none',
@@ -1851,25 +1724,21 @@ export default function MinimalApp() {
                 display: 'inline-flex',
                 alignItems: 'center',
                 gap: '0.75rem',
-                boxShadow: '0 5px 15px rgba(0, 164, 224, 0.2)',
-                ':hover': {
-                  backgroundColor: '#0094d0',
-                  transform: 'translateY(-2px)',
-                  boxShadow: '0 8px 20px rgba(0, 164, 224, 0.3)'
-                }
+                boxShadow: '0 5px 15px rgba(0, 164, 224, 0.2)'
               }}
+              className="cta-button-hover"
             >
               <Wand2 size={18} />
               {showDesignAssistant ? 'Design-Assistent ausblenden' : 'Design-Assistent anzeigen'}
             </button>
           </div>
-          
+
           {showDesignAssistant && (
-            <div style={{ 
+            <div style={{
               marginTop: '2rem',
               animation: 'fadeIn 0.5s ease'
             }}>
-              <ClaudeDesignAssistant 
+              <ClaudeDesignAssistant
                 initialDescription="Erstellen Sie ein modernes Design-System für die 'Luxembourg Pas Chère' Website, die Benutzern hilft, bezahlbare Angebote in Luxemburg zu finden. Die Website soll luxemburgische Farben (rot und blau) verwenden, professionell aussehen und ein Buchcover hervorheben."
               />
             </div>
@@ -1925,15 +1794,7 @@ export default function MinimalApp() {
           </div>
           
           {/* Contact Grid */}
-          <div style={{ 
-            display: 'grid',
-            gridTemplateColumns: '1fr 1fr',
-            gap: '3rem',
-            '@media (max-width: 992px)': {
-              gridTemplateColumns: '1fr',
-              gap: '2rem'
-            }
-          }}>
+          <div className="contact-grid">
             {/* Contact Info */}
             <div>
               <h3 style={{ 
@@ -1970,11 +1831,12 @@ export default function MinimalApp() {
                     <p style={{ margin: '0 0 0.75rem', lineHeight: '1.6', opacity: 0.9 }}>
                       Rejoignez notre communauté pour recevoir régulièrement des astuces gratuites et des offres exclusives.
                     </p>
-                    <a 
-                      href="https://www.instagram.com/luxembourgpaschere/" 
-                      target="_blank" 
+                    <a
+                      href="https://www.instagram.com/luxembourgpaschere/"
+                      target="_blank"
                       rel="noopener noreferrer"
-                      style={{ 
+                      className="hover-bg"
+                      style={{
                         display: 'inline-flex',
                         alignItems: 'center',
                         gap: '0.5rem',
@@ -1984,10 +1846,7 @@ export default function MinimalApp() {
                         padding: '0.5rem 1rem',
                         borderRadius: '8px',
                         fontWeight: '500',
-                        transition: 'background-color 0.3s ease',
-                        ':hover': {
-                          backgroundColor: 'rgba(255,255,255,0.3)'
-                        }
+                        transition: 'background-color 0.3s ease'
                       }}
                     >
                       <Instagram size={18} />
@@ -2048,28 +1907,10 @@ export default function MinimalApp() {
                 </p>
                 
                 <div style={{ position: 'relative' }}>
-                  <input 
-                    type="email" 
-                    placeholder="Votre adresse email" 
-                    style={{ 
-                      width: '100%',
-                      padding: '0.875rem 1rem',
-                      paddingRight: '7rem',
-                      borderRadius: '8px',
-                      border: '1px solid rgba(255,255,255,0.3)',
-                      background: 'rgba(255,255,255,0.1)',
-                      backdropFilter: 'blur(5px)',
-                      color: 'white',
-                      outline: 'none',
-                      fontSize: '1rem',
-                      '::placeholder': { 
-                        color: 'rgba(255,255,255,0.6)' 
-                      },
-                      ':focus': {
-                        borderColor: 'rgba(255,255,255,0.5)',
-                        boxShadow: '0 0 0 3px rgba(255,255,255,0.1)'
-                      }
-                    }}
+                  <input
+                    type="email"
+                    placeholder="Votre adresse email"
+                    className="form-input-base"
                   />
                   <button 
                     style={{ 
@@ -2123,27 +1964,11 @@ export default function MinimalApp() {
                   >
                     Nom
                   </label>
-                  <input 
-                    type="text" 
-                    id="name" 
-                    placeholder="Votre nom complet" 
-                    style={{ 
-                      width: '100%',
-                      padding: '0.875rem 1rem',
-                      borderRadius: '8px',
-                      border: '1px solid rgba(255,255,255,0.3)',
-                      background: 'rgba(255,255,255,0.1)',
-                      color: 'white',
-                      outline: 'none',
-                      fontSize: '1rem',
-                      '::placeholder': { 
-                        color: 'rgba(255,255,255,0.6)' 
-                      },
-                      ':focus': {
-                        borderColor: 'rgba(255,255,255,0.5)',
-                        boxShadow: '0 0 0 3px rgba(255,255,255,0.1)'
-                      }
-                    }}
+                  <input
+                    type="text"
+                    id="name"
+                    placeholder="Votre nom complet"
+                    className="form-input-base"
                   />
                 </div>
                 
@@ -2159,27 +1984,11 @@ export default function MinimalApp() {
                   >
                     Email
                   </label>
-                  <input 
-                    type="email" 
-                    id="email" 
-                    placeholder="Votre adresse email" 
-                    style={{ 
-                      width: '100%',
-                      padding: '0.875rem 1rem',
-                      borderRadius: '8px',
-                      border: '1px solid rgba(255,255,255,0.3)',
-                      background: 'rgba(255,255,255,0.1)',
-                      color: 'white',
-                      outline: 'none',
-                      fontSize: '1rem',
-                      '::placeholder': { 
-                        color: 'rgba(255,255,255,0.6)' 
-                      },
-                      ':focus': {
-                        borderColor: 'rgba(255,255,255,0.5)',
-                        boxShadow: '0 0 0 3px rgba(255,255,255,0.1)'
-                      }
-                    }}
+                  <input
+                    type="email"
+                    id="email"
+                    placeholder="Votre adresse email"
+                    className="form-input-base"
                   />
                 </div>
                 
@@ -2195,34 +2004,18 @@ export default function MinimalApp() {
                   >
                     Message
                   </label>
-                  <textarea 
-                    id="message" 
+                  <textarea
+                    id="message"
                     rows={5}
-                    placeholder="Votre message..." 
-                    style={{ 
-                      width: '100%',
-                      padding: '0.875rem 1rem',
-                      borderRadius: '8px',
-                      border: '1px solid rgba(255,255,255,0.3)',
-                      background: 'rgba(255,255,255,0.1)',
-                      color: 'white',
-                      outline: 'none',
-                      fontSize: '1rem',
-                      resize: 'vertical',
-                      '::placeholder': { 
-                        color: 'rgba(255,255,255,0.6)' 
-                      },
-                      ':focus': {
-                        borderColor: 'rgba(255,255,255,0.5)',
-                        boxShadow: '0 0 0 3px rgba(255,255,255,0.1)'
-                      }
-                    }}
+                    placeholder="Votre message..."
+                    className="form-input-base"
                   />
                 </div>
                 
-                <button 
-                  type="submit" 
-                  style={{ 
+                <button
+                  type="submit"
+                  className="form-button-hover"
+                  style={{
                     width: '100%',
                     background: 'white',
                     color: '#E31837',
@@ -2232,11 +2025,7 @@ export default function MinimalApp() {
                     fontWeight: '600',
                     fontSize: '1rem',
                     cursor: 'pointer',
-                    transition: 'transform 0.3s ease, box-shadow 0.3s ease',
-                    ':hover': {
-                      transform: 'translateY(-2px)',
-                      boxShadow: '0 5px 15px rgba(0,0,0,0.1)'
-                    }
+                    transition: 'transform 0.3s ease, box-shadow 0.3s ease'
                   }}
                 >
                   Envoyer le message
@@ -2285,7 +2074,7 @@ export default function MinimalApp() {
                   href="https://www.instagram.com/luxembourgpaschere/" 
                   target="_blank" 
                   rel="noopener noreferrer"
-                  style={{ 
+                  style={{
                     background: 'radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%)',
                     width: '36px',
                     height: '36px',
@@ -2293,10 +2082,7 @@ export default function MinimalApp() {
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    transition: 'transform 0.3s ease',
-                    ':hover': {
-                      transform: 'scale(1.1)'
-                    }
+                    transition: 'transform 0.3s ease'
                   }}
                 >
                   <Instagram size={18} color="white" />
@@ -2322,18 +2108,15 @@ export default function MinimalApp() {
                   <li key={item.id} style={{ marginBottom: '0.75rem' }}>
                     <a 
                       href={`#${item.id}`} 
-                      style={{ 
-                        color: '#aaa',
-                        textDecoration: 'none',
-                        fontSize: '0.95rem',
-                        transition: 'color 0.2s ease',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '0.5rem',
-                        ':hover': {
-                          color: 'white'
-                        }
-                      }}
+                        style={{
+                          color: '#aaa',
+                          textDecoration: 'none',
+                          fontSize: '0.95rem',
+                          transition: 'color 0.2s ease',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '0.5rem'
+                        }}
                     >
                       <ArrowRight size={14} />
                       {item.label}
@@ -2345,14 +2128,14 @@ export default function MinimalApp() {
             
             {/* Contact Info */}
             <div>
-              <h3 style={{ 
+              <h3 style={{
                 fontSize: '1.1rem',
                 marginBottom: '1.5rem',
                 fontWeight: '600'
               }}>
                 Contact
               </h3>
-              <p style={{ 
+              <p style={{
                 fontSize: '0.95rem',
                 lineHeight: '1.6',
                 color: '#aaa',
@@ -2360,16 +2143,13 @@ export default function MinimalApp() {
               }}>
                 Pour toute question ou suggestion, n'hésitez pas à nous contacter.
               </p>
-              <a 
-                href="mailto:info@luxembourgpaschere.lu" 
-                style={{ 
+              <a
+                href="mailto:info@luxembourgpaschere.lu"
+                style={{
                   color: '#00A4E0',
                   textDecoration: 'none',
                   fontSize: '0.95rem',
-                  transition: 'color 0.2s ease',
-                  ':hover': {
-                    color: '#4dc4f0'
-                  }
+                  transition: 'color 0.2s ease'
                 }}
               >
                 info@luxembourgpaschere.lu
@@ -2394,10 +2174,10 @@ export default function MinimalApp() {
                 Inscrivez-vous pour recevoir nos actualités et offres spéciales.
               </p>
               <div style={{ position: 'relative' }}>
-                <input 
-                  type="email" 
-                  placeholder="Votre email" 
-                  style={{ 
+                <input
+                  type="email"
+                  placeholder="Votre email"
+                  style={{
                     width: '100%',
                     padding: '0.75rem 1rem',
                     paddingRight: '3.5rem',
@@ -2406,18 +2186,11 @@ export default function MinimalApp() {
                     background: '#222',
                     color: 'white',
                     outline: 'none',
-                    fontSize: '0.95rem',
-                    '::placeholder': { 
-                      color: '#777' 
-                    },
-                    ':focus': {
-                      borderColor: '#444',
-                      boxShadow: '0 0 0 3px rgba(255,255,255,0.05)'
-                    }
+                    fontSize: '0.95rem'
                   }}
                 />
-                <button 
-                  style={{ 
+                <button
+                  style={{
                     position: 'absolute',
                     right: '4px',
                     top: '4px',
@@ -2430,10 +2203,7 @@ export default function MinimalApp() {
                     alignItems: 'center',
                     justifyContent: 'center',
                     cursor: 'pointer',
-                    transition: 'background-color 0.2s ease',
-                    ':hover': {
-                      backgroundColor: '#d01531'
-                    }
+                    transition: 'background-color 0.2s ease'
                   }}
                 >
                   <ArrowRight size={16} color="white" />
@@ -2461,52 +2231,59 @@ export default function MinimalApp() {
               display: 'flex',
               gap: '1.5rem'
             }}>
-              <a href="#" style={{ color: '#777', textDecoration: 'none', ':hover': { color: '#aaa' } }}>
+              <a href="#" style={{ color: '#777', textDecoration: 'none' }}>
                 Mentions légales
               </a>
-              <a href="#" style={{ color: '#777', textDecoration: 'none', ':hover': { color: '#aaa' } }}>
+              <a href="#" style={{ color: '#777', textDecoration: 'none' }}>
                 Politique de confidentialité
               </a>
             </div>
           </div>
         </div>
       </footer>
-      
-      {/* Add keyframe animations */}
+      {/* CSS styles moved to separate file */}
       <style dangerouslySetInnerHTML={{ __html: `
+        .instagram-icon:hover {
+          transform: scale(1.1);
+        }
+
+        .language-button:hover {
+          background-color: #f5f5f5;
+        }
+
         @keyframes fadeIn {
           from { opacity: 0; }
           to { opacity: 1; }
         }
-        
+
         @keyframes fadeInUp {
-          from { 
+          from {
             opacity: 0;
-            transform: translateY(20px);
+            transform: translateY(30px);
           }
-          to { 
+          to {
             opacity: 1;
             transform: translateY(0);
           }
         }
-        
+
         @keyframes slideInRight {
-          from { 
+          from {
             opacity: 0;
             transform: translateX(30px);
           }
-          to { 
+          to {
             opacity: 1;
             transform: translateX(0);
           }
         }
-        
+
         @keyframes pulse {
           0% { transform: scale(1); }
           50% { transform: scale(1.05); }
           100% { transform: scale(1); }
         }
-        
+
         @keyframes bounce {
           0%, 20%, 50%, 80%, 100% { transform: translateY(0) translateX(-50%); }
           40% { transform: translateY(-10px) translateX(-50%); }

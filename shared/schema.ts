@@ -53,3 +53,17 @@ export const newsletterSchema = createInsertSchema(newsletters).pick({
 
 export type InsertNewsletter = z.infer<typeof newsletterSchema>;
 export type Newsletter = typeof newsletters.$inferSelect;
+
+// Anthropic API request schema
+export const anthropicRequestSchema = z.object({
+  prompt: z.string().min(1, "Prompt is required and cannot be empty"),
+});
+
+export type AnthropicRequest = z.infer<typeof anthropicRequestSchema>;
+
+// Gemini API request schema
+export const geminiRequestSchema = z.object({
+  prompt: z.string().min(1, "Prompt is required and cannot be empty"),
+});
+
+export type GeminiRequest = z.infer<typeof geminiRequestSchema>;
