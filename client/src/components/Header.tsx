@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import MobileMenu from './ui/MobileMenu';
+import SearchBar from './SearchBar';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Instagram, Facebook, Linkedin } from "lucide-react";
 
@@ -100,14 +101,21 @@ export default function Header() {
                     </a>
                   </li>
                   <li className="nav-item">
-                    <a 
-                      className="nav-link font-montserrat fw-medium px-3" 
+                    <a
+                      className="nav-link font-montserrat fw-medium px-3"
                       href="#contact"
                     >
                       Contact
                     </a>
                   </li>
-                  
+
+                  {/* Search functionality */}
+                  <li className="nav-item">
+                    <div className="nav-link px-3">
+                      <SearchBar />
+                    </div>
+                  </li>
+
                   {/* Social Media Icons */}
                   <li className="nav-item">
                     <a 

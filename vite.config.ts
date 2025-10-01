@@ -44,5 +44,21 @@ export default defineConfig({
   build: {
     outDir: path.resolve(__dirname, "dist/public"),
     emptyOutDir: true,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          // Split vendor libraries
+          vendor: ['react', 'react-dom', 'react-router-dom'],
+          // Split UI libraries
+          ui: ['@radix-ui/react-accordion', '@radix-ui/react-dialog', '@radix-ui/react-dropdown-menu', '@radix-ui/react-tabs'],
+          // Split utility libraries
+          utils: ['clsx', 'class-variance-authority', 'tailwind-merge'],
+          // Split animation library
+          animation: ['framer-motion'],
+          // Split query library
+          query: ['@tanstack/react-query']
+        }
+      }
+    }
   },
 });

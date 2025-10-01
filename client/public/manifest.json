@@ -1,14 +1,14 @@
 {
-  "name": "Luxembourg Pas Chère",
+  "name": "Luxembourg Pas Chère - Guide d'économies",
   "short_name": "LuxPasChère",
-  "description": "Entdecken Sie Luxemburg ohne viel Geld auszugeben. Finden Sie günstige Restaurants, Unterhaltung, Shopping und mehr.",
+  "description": "Découvrez comment vivre au Luxembourg sans se ruiner. Guide pratique pour économiser sur alimentation, transport, logement et loisirs.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#E31837",
   "orientation": "portrait-primary",
   "dir": "ltr",
-  "lang": "de",
+  "lang": "fr",
   "categories": ["lifestyle", "travel", "finance", "shopping"],
   "icons": [
     {
@@ -60,42 +60,42 @@
       "purpose": "any maskable"
     }
   ],
+  "shortcuts": [
+    {
+      "name": "Offres actuelles",
+      "short_name": "Offres",
+      "description": "Découvrez les derniers bons plans et promotions",
+      "url": "/#categories",
+      "icons": [{"src": "/images/icons/offers-192x192.png", "sizes": "192x192"}]
+    },
+    {
+      "name": "Avis clients",
+      "short_name": "Témoignages",
+      "description": "Découvrez les avis de nos lecteurs satisfaits",
+      "url": "/#testimonials",
+      "icons": [{"src": "/images/icons/blog-192x192.png", "sizes": "192x192"}]
+    }
+  ],
   "screenshots": [
     {
       "src": "/images/screenshots/homepage-narrow.png",
       "sizes": "750x1334",
       "type": "image/png",
       "form_factor": "narrow",
-      "label": "Homepage of Luxembourg Pas Chère (Mobile)"
+      "label": "Page d'accueil Luxembourg Pas Chère (Mobile)"
     },
     {
       "src": "/images/screenshots/homepage-wide.png",
       "sizes": "1280x800",
       "type": "image/png",
       "form_factor": "wide",
-      "label": "Homepage of Luxembourg Pas Chère (Desktop)"
-    }
-  ],
-  "shortcuts": [
-    {
-      "name": "Aktuelle Angebote",
-      "short_name": "Angebote",
-      "description": "Zeige die neuesten Angebote und Rabatte",
-      "url": "/#offers",
-      "icons": [{"src": "/images/icons/offers-192x192.png", "sizes": "192x192"}]
-    },
-    {
-      "name": "Blog lesen",
-      "short_name": "Blog",
-      "description": "Lesen Sie unsere neuesten Artikel",
-      "url": "/#blog",
-      "icons": [{"src": "/images/icons/blog-192x192.png", "sizes": "192x192"}]
+      "label": "Page d'accueil Luxembourg Pas Chère (Ordinateur)"
     }
   ],
   "related_applications": [
     {
       "platform": "webapp",
-      "url": "https://luxembourgpaschère.com/manifest.json"
+      "url": "https://luxembourgpaschere.com/manifest.json"
     }
   ],
   "prefer_related_applications": false,

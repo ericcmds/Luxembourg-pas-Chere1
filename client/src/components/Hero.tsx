@@ -3,12 +3,12 @@ import { ShoppingCart } from "lucide-react";
 
 export default function Hero() {
   return (
-    <section id="home" className="position-relative text-white overflow-hidden">
-      {/* Hintergrund-Gradient */}
-      <div 
-        className="position-absolute top-0 start-0 w-100 h-100" 
+    <section id="home" className="position-relative text-white overflow-hidden glass-morphism">
+      {/* Modern Dynamic Background */}
+      <div
+        className="position-absolute top-0 start-0 w-100 h-100 pulse-modern"
         style={{
-          background: 'linear-gradient(135deg, rgba(227, 24, 55, 0.95) 0%, rgba(0, 164, 224, 0.95) 100%)',
+          background: 'linear-gradient(135deg, rgba(102, 126, 234, 0.95) 0%, rgba(118, 75, 162, 0.95) 100%)',
           zIndex: 0
         }}
       />
@@ -62,22 +62,44 @@ export default function Hero() {
                 </div>
               </div>
               
-              {/* COMMANDER Button mit fester Größe und Position */}
+              {/* CTA Button mit verbesserter Accessibility und Touch-Optimierung */}
               <div className="text-center mb-5">
-                <button 
-                  className="btn fw-bold" 
-                  style={{ 
-                    fontSize: "1rem",
+                <button
+                  className="hero-cta-button"
+                  style={{
+                    fontSize: "1.1rem",
+                    fontWeight: "700",
                     background: "#00A4E0",
                     color: "white",
                     border: "none",
-                    borderRadius: "4px",
-                    padding: "12px 30px",
+                    borderRadius: "50px",
+                    padding: "16px 32px",
+                    minWidth: "200px",
+                    minHeight: "48px",
                     letterSpacing: "1px",
-                    boxShadow: "0 5px 15px rgba(0,0,0,0.2)"
+                    boxShadow: "0 6px 20px rgba(0,164,224,0.4)",
+                    transition: "all 0.3s ease",
+                    cursor: "pointer",
+                    display: "inline-flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    gap: "8px"
                   }}
+                  onMouseEnter={(e) => {
+                    const target = e.target as HTMLElement;
+                    target.style.transform = "translateY(-2px)";
+                    target.style.boxShadow = "0 10px 25px rgba(0,164,224,0.5)";
+                  }}
+                  onMouseLeave={(e) => {
+                    const target = e.target as HTMLElement;
+                    target.style.transform = "translateY(0)";
+                    target.style.boxShadow = "0 6px 20px rgba(0,164,224,0.4)";
+                  }}
+                  aria-label="Commander le livre Luxembourg Pas Chère maintenant"
+                  role="button"
+                  tabIndex={0}
                 >
-                  <ShoppingCart className="me-2" size={18} />
+                  <ShoppingCart size={20} aria-hidden="true" />
                   COMMANDER
                 </button>
               </div>
